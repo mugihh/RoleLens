@@ -1,0 +1,97 @@
+[
+  {
+    "job_id": "mercari-ml-platform-001",
+    "reviewed_at": "2026-06-21",
+    "category": "A",
+    "fit_score": 88,
+    "role_type": "Product ML Engineer",
+    "is_real_coding_role": true,
+    "coding_intensity": "high",
+    "customer_facing_level": "low",
+    "reasons": [
+      "Search and recommendation work matches ML/NLP-adjacent interests.",
+      "Production ML and backend ownership are explicit in the role.",
+      "Marketplace product context is strong portfolio alignment."
+    ],
+    "risks": [
+      "May expect prior production ML platform experience.",
+      "Japanese-language expectations are not clear from the demo data."
+    ],
+    "prep_actions": [
+      "Prepare a retrieval or ranking project with evaluation metrics.",
+      "Write examples covering ML deployment, monitoring, and A/B testing."
+    ],
+    "dimensions": {
+      "nlp_relevance": "medium",
+      "ml_relevance": "high",
+      "english_friendliness": "medium",
+      "visa_or_pr_relevance": "unknown",
+      "compensation_signal": "likely_high"
+    },
+    "compensation_notes": "Demo signal only; no salary research was performed.",
+    "external_research": []
+  },
+  {
+    "job_id": "datadog-backend-001",
+    "reviewed_at": "2026-06-21",
+    "category": "A",
+    "fit_score": 81,
+    "role_type": "Backend / Data Platform Engineer",
+    "is_real_coding_role": true,
+    "coding_intensity": "high",
+    "customer_facing_level": "low",
+    "reasons": [
+      "Coding-heavy backend and distributed systems role.",
+      "Strong signal for data infrastructure and reliability experience.",
+      "Brand and technical depth are useful for future APAC big-tech transitions."
+    ],
+    "risks": [
+      "Less directly related to NLP or LLM work.",
+      "May require stronger systems design depth than an early-career candidate has today."
+    ],
+    "prep_actions": [
+      "Review distributed systems fundamentals and observability pipelines.",
+      "Prepare stories about debugging, reliability, and data processing tradeoffs."
+    ],
+    "dimensions": {
+      "nlp_relevance": "low",
+      "ml_relevance": "medium",
+      "english_friendliness": "high",
+      "visa_or_pr_relevance": "unknown",
+      "compensation_signal": "likely_high"
+    },
+    "compensation_notes": "Demo signal only; no salary research was performed.",
+    "external_research": []
+  },
+  {
+    "job_id": "google-fde-001",
+    "reviewed_at": "2026-06-21",
+    "category": "B",
+    "fit_score": 67,
+    "role_type": "Customer-facing AI Engineer",
+    "is_real_coding_role": true,
+    "coding_intensity": "medium",
+    "customer_facing_level": "high",
+    "reasons": [
+      "Generative AI and prototyping work are technically relevant.",
+      "The role could build credible LLM application experience."
+    ],
+    "risks": [
+      "Forward deployed work may optimize for delivery and customers over product engineering.",
+      "Long-term code ownership is unclear."
+    ],
+    "prep_actions": [
+      "Ask interviewers how much time is spent coding versus customer meetings.",
+      "Prepare RAG, evaluation, and deployment examples."
+    ],
+    "dimensions": {
+      "nlp_relevance": "high",
+      "ml_relevance": "high",
+      "english_friendliness": "medium",
+      "visa_or_pr_relevance": "unknown",
+      "compensation_signal": "likely_high"
+    },
+    "compensation_notes": "Demo signal only; no salary research was performed.",
+    "external_research": []
+  }
+]

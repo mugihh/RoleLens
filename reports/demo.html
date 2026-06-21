@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoleLens Demo Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #d8dee9;
+      --accent: #0f766e;
+      --accent-soft: #e6f4f1;
+      --warn: #9a5b00;
+      --warn-soft: #fff4db;
+      --avoid: #9f1239;
+      --avoid-soft: #ffe4ea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
+    header {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 0; font-size: 34px; letter-spacing: 0; }
+    h2 { margin: 32px 0 14px; font-size: 22px; }
+    h3 { margin-bottom: 8px; font-size: 18px; }
+    a { color: var(--accent); }
+    .lede { max-width: 720px; color: var(--muted); }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+    .metric, .job {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .metric { padding: 14px; }
+    .metric strong { display: block; font-size: 24px; }
+    .metric span { color: var(--muted); font-size: 13px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .job { padding: 18px; }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: #eef1f6;
+      color: #394150;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .category-a, .include { background: var(--accent-soft); color: var(--accent); }
+    .category-b, .watch { background: var(--warn-soft); color: var(--warn); }
+    .exclude { background: var(--avoid-soft); color: var(--avoid); }
+    .score { font-size: 32px; font-weight: 750; margin: 8px 0; }
+    .section-list { padding-left: 18px; margin: 8px 0 0; }
+    .section-list li { margin-bottom: 4px; }
+    .empty {
+      padding: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.55);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>RoleLens Demo Report</h1>
+      <p class="lede">Generated from local sample data. No internet access, private CV, live coding-agent review, or scraper output was used.</p>
+    </header>
+    <section class="summary" aria-label="Report summary">
+      <div class="metric"><strong>6</strong><span>Jobs loaded</span></div>
+      <div class="metric"><strong>3</strong><span>Reviewed</span></div>
+      <div class="metric"><strong>1</strong><span>Needs review</span></div>
+      <div class="metric"><strong>1</strong><span>Watchlist</span></div>
+      <div class="metric"><strong>1</strong><span>Recently missing</span></div>
+    </section>
+    <section><h2>Top Matches</h2><div class="grid">
+    <article class="job">
+      <h3>Mercari - Machine Learning Engineer, Search and Recommendations</h3>
+      <div class="meta">
+        <span>Tokyo, Japan</span>
+        <span>demo</span>
+        <span>active</span>
+      </div>
+      <p><span class="badge include">include</span></p>
+      
+        <span class="badge category-a">Category A</span>
+        <div class="score">88</div>
+        <p><strong>Product ML Engineer</strong></p>
+        <p>Coding intensity: high<br>
+        Customer-facing level: low</p>
+        <p><strong>Reasons</strong></p><ul class="section-list"><li>Search and recommendation work matches ML/NLP-adjacent interests.</li><li>Production ML and backend ownership are explicit in the role.</li><li>Marketplace product context is strong portfolio alignment.</li></ul>
+        <p><strong>Risks</strong></p><ul class="section-list"><li>May expect prior production ML platform experience.</li><li>Japanese-language expectations are not clear from the demo data.</li></ul>
+        <p><strong>Prep</strong></p><ul class="section-list"><li>Prepare a retrieval or ranking project with evaluation metrics.</li><li>Write examples covering ML deployment, monitoring, and A/B testing.</li></ul>
+        
+      <p><a href="https://example.com/mercari/ml-platform">Original JD</a></p>
+    </article>
+    
+
+    <article class="job">
+      <h3>Datadog Japan - Software Engineer, Data Platform</h3>
+      <div class="meta">
+        <span>Tokyo, Japan</span>
+        <span>demo</span>
+        <span>active</span>
+      </div>
+      <p><span class="badge include">include</span></p>
+      
+        <span class="badge category-a">Category A</span>
+        <div class="score">81</div>
+        <p><strong>Backend / Data Platform Engineer</strong></p>
+        <p>Coding intensity: high<br>
+        Customer-facing level: low</p>
+        <p><strong>Reasons</strong></p><ul class="section-list"><li>Coding-heavy backend and distributed systems role.</li><li>Strong signal for data infrastructure and reliability experience.</li><li>Brand and technical depth are useful for future APAC big-tech transitions.</li></ul>
+        <p><strong>Risks</strong></p><ul class="section-list"><li>Less directly related to NLP or LLM work.</li><li>May require stronger systems design depth than an early-career candidate has today.</li></ul>
+        <p><strong>Prep</strong></p><ul class="section-list"><li>Review distributed systems fundamentals and observability pipelines.</li><li>Prepare stories about debugging, reliability, and data processing tradeoffs.</li></ul>
+        
+      <p><a href="https://example.com/datadog/data-platform">Original JD</a></p>
+    </article>
+    
+
+    <article class="job">
+      <h3>Google Japan - Forward Deployed AI Engineer, Generative AI</h3>
+      <div class="meta">
+        <span>Tokyo, Japan</span>
+        <span>manual_demo</span>
+        <span>active</span>
+      </div>
+      <p><span class="badge watch">watch</span></p>
+      
+        <span class="badge category-b">Category B</span>
+        <div class="score">67</div>
+        <p><strong>Customer-facing AI Engineer</strong></p>
+        <p>Coding intensity: medium<br>
+        Customer-facing level: high</p>
+        <p><strong>Reasons</strong></p><ul class="section-list"><li>Generative AI and prototyping work are technically relevant.</li><li>The role could build credible LLM application experience.</li></ul>
+        <p><strong>Risks</strong></p><ul class="section-list"><li>Forward deployed work may optimize for delivery and customers over product engineering.</li><li>Long-term code ownership is unclear.</li></ul>
+        <p><strong>Prep</strong></p><ul class="section-list"><li>Ask interviewers how much time is spent coding versus customer meetings.</li><li>Prepare RAG, evaluation, and deployment examples.</li></ul>
+        
+      <p><a href="https://example.com/google/fde-genai">Original JD</a></p>
+    </article>
+    </div></section>
+    <section><h2>Needs Review</h2><div class="grid">
+    <article class="job">
+      <h3>PayPay - Backend Software Engineer, Payments Platform</h3>
+      <div class="meta">
+        <span>Tokyo, Japan</span>
+        <span>demo</span>
+        <span>active</span>
+      </div>
+      <p><span class="badge include">include</span></p>
+      <p class="empty">Review pending.</p>
+      <p><a href="https://example.com/paypay/backend-payments">Original JD</a></p>
+    </article>
+    </div></section>
+    <section><h2>Watchlist</h2><div class="grid">
+    <article class="job">
+      <h3>Google Japan - Forward Deployed AI Engineer, Generative AI</h3>
+      <div class="meta">
+        <span>Tokyo, Japan</span>
+        <span>manual_demo</span>
+        <span>active</span>
+      </div>
+      <p><span class="badge watch">watch</span></p>
+      
+        <span class="badge category-b">Category B</span>
+        <div class="score">67</div>
+        <p><strong>Customer-facing AI Engineer</strong></p>
+        <p>Coding intensity: medium<br>
+        Customer-facing level: high</p>
+        <p><strong>Reasons</strong></p><ul class="section-list"><li>Generative AI and prototyping work are technically relevant.</li><li>The role could build credible LLM application experience.</li></ul>
+        <p><strong>Risks</strong></p><ul class="section-list"><li>Forward deployed work may optimize for delivery and customers over product engineering.</li><li>Long-term code ownership is unclear.</li></ul>
+        <p><strong>Prep</strong></p><ul class="section-list"><li>Ask interviewers how much time is spent coding versus customer meetings.</li><li>Prepare RAG, evaluation, and deployment examples.</li></ul>
+        
+      <p><a href="https://example.com/google/fde-genai">Original JD</a></p>
+    </article>
+    </div></section>
+    <section><h2>Recently Missing / Possibly Closed</h2><div class="grid">
+    <article class="job">
+      <h3>Woven by Toyota - Backend Engineer, Simulation Platform</h3>
+      <div class="meta">
+        <span>Tokyo, Japan</span>
+        <span>demo</span>
+        <span>missing</span>
+      </div>
+      <p><span class="badge include">include</span></p>
+      <p class="empty">Review pending.</p>
+      <p><a href="https://example.com/woven/backend-simulation">Original JD</a></p>
+    </article>
+    </div></section>
+  </main>
+</body>
+</html>
