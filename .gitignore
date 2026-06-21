@@ -1,0 +1,60 @@
+# Local planning notes
+AI_Job_Radar_for_Technical_Roles.md
+ROLELENS_V1_SPEC.md
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Build/package artifacts
+build/
+dist/
+*.egg-info/
+
+# Private candidate data
+candidate/profile.yaml
+candidate/cv.md
+candidate/resume.tex
+candidate/resume.pdf
+candidate/private/
+
+# Local databases and raw personal data
+data/*.sqlite
+data/*.sqlite3
+data/*.db
+data/jobs_raw.json
+data/jobs_seen.json
+data/reviews/
+
+# Runtime manual imports
+imports/manual/*
+!imports/manual/.gitkeep
+
+# Generated review queues/results
+review_queue/*
+!review_queue/.gitkeep
+
+review_results/*
+!review_results/.gitkeep
+
+# Personal reports
+reports/latest.html
+reports/latest.md
+reports/personal/
+
+# OS/editor noise
+.DS_Store
+.idea/
+.vscode/
+
