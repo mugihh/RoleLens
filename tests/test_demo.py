@@ -24,7 +24,7 @@ def test_generate_demo_report_writes_markdown_and_html(tmp_path: Path) -> None:
 
     assert "Jobs loaded: 6" in markdown
     assert "Needs review: 1" in markdown
-    assert "PayPay - Backend Software Engineer" in markdown
+    assert "Payflow Labs - Backend Software Engineer" in markdown
     assert "<title>RoleLens Demo Report</title>" in html
 
 

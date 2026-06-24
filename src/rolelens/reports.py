@@ -10,7 +10,7 @@ from rolelens.models import JobRecord, ReviewRecord
 
 
 @dataclass(frozen=True)
-class DemoReportResult:
+class ReportResult:
     markdown_path: Path
     html_path: Path
     job_count: int
@@ -21,26 +21,66 @@ def generate_demo_report(
     jobs_path: Path,
     reviews_path: Path,
     output_dir: Path,
-) -> DemoReportResult:
+) -> ReportResult:
     jobs = [job.model_dump(mode="json") for job in _load_jobs(jobs_path)]
     reviews = [review.model_dump(mode="json") for review in _load_reviews(reviews_path)]
     reviews_by_job_id = {review["job_id"]: review for review in reviews}
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    markdown_path = output_dir / "demo.md"
-    html_path = output_dir / "demo.html"
+    return generate_report(
+        jobs=jobs,
+        reviews_by_job_id=reviews_by_job_id,
+        output_dir=output_dir,
+        basename="demo",
+        title="RoleLens Demo Report",
+        lede="Generated from local sample data. No internet access, private CV, live coding-agent review, or scraper output was used.",
+    )
 
-    markdown = _render_markdown(jobs, reviews_by_job_id)
-    html_report = _render_html(jobs, reviews_by_job_id)
+
+def generate_personal_report(
+    jobs_path: Path,
+    reviews_dir: Path,
+    output_dir: Path,
+) -> ReportResult:
+    jobs = [job.model_dump(mode="json") for job in _load_jobs(jobs_path)]
+    reviews = [
+        review.model_dump(mode="json")
+        for review in _load_review_dir(reviews_dir)
+    ]
+    reviews_by_job_id = {review["job_id"]: review for review in reviews}
+
+    return generate_report(
+        jobs=jobs,
+        reviews_by_job_id=reviews_by_job_id,
+        output_dir=output_dir,
+        basename="latest",
+        title="RoleLens Report",
+        lede="Generated from local jobs and imported agent reviews.",
+    )
+
+
+def generate_report(
+    jobs: list[dict[str, Any]],
+    reviews_by_job_id: dict[str, dict[str, Any]],
+    output_dir: Path,
+    basename: str,
+    title: str,
+    lede: str,
+) -> ReportResult:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    markdown_path = output_dir / f"{basename}.md"
+    html_path = output_dir / f"{basename}.html"
+
+    markdown = _render_markdown(jobs, reviews_by_job_id, title, lede)
+    html_report = _render_html(jobs, reviews_by_job_id, title, lede)
 
     markdown_path.write_text(markdown, encoding="utf-8")
     html_path.write_text(html_report, encoding="utf-8")
 
-    return DemoReportResult(
+    return ReportResult(
         markdown_path=markdown_path,
         html_path=html_path,
         job_count=len(jobs),
-        reviewed_count=len(reviews),
+        reviewed_count=len(reviews_by_job_id),
     )
 
 
@@ -59,9 +99,23 @@ def _load_reviews(path: Path) -> list[ReviewRecord]:
     return [ReviewRecord.model_validate(item) for item in _load_json_list(path)]
 
 
+def _load_review_dir(path: Path) -> list[ReviewRecord]:
+    if not path.exists():
+        return []
+    reviews: list[ReviewRecord] = []
+    for review_path in sorted(path.glob("*.review.json")):
+        data = json.loads(review_path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError(f"Expected JSON object in {review_path}")
+        reviews.append(ReviewRecord.model_validate(data))
+    return reviews
+
+
 def _render_markdown(
     jobs: list[dict[str, Any]],
     reviews_by_job_id: dict[str, dict[str, Any]],
+    title: str,
+    lede: str,
 ) -> str:
     active_jobs = [job for job in jobs if job.get("status") != "missing"]
     missing_jobs = [job for job in jobs if job.get("status") == "missing"]
@@ -81,9 +135,9 @@ def _render_markdown(
     )
 
     lines = [
-        "# RoleLens Demo Report",
+        f"# {title}",
         "",
-        "Generated from local sample data. No internet access, private CV, live coding-agent review, or scraper output was used.",
+        lede,
         "",
         "## Summary",
         "",
@@ -165,6 +219,8 @@ def _markdown_job_card(job: dict[str, Any], review: dict[str, Any] | None) -> li
 def _render_html(
     jobs: list[dict[str, Any]],
     reviews_by_job_id: dict[str, dict[str, Any]],
+    title: str,
+    lede: str,
 ) -> str:
     active_jobs = [job for job in jobs if job.get("status") != "missing"]
     missing_jobs = [job for job in jobs if job.get("status") == "missing"]
@@ -188,7 +244,7 @@ def _render_html(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RoleLens Demo Report</title>
+  <title>{html.escape(title)}</title>
   <style>
     :root {{
       color-scheme: light;
@@ -284,8 +340,8 @@ def _render_html(
 <body>
   <main>
     <header>
-      <h1>RoleLens Demo Report</h1>
-      <p class="lede">Generated from local sample data. No internet access, private CV, live coding-agent review, or scraper output was used.</p>
+      <h1>{html.escape(title)}</h1>
+      <p class="lede">{html.escape(lede)}</p>
     </header>
     <section class="summary" aria-label="Report summary">
       {_metric("Jobs loaded", len(jobs))}

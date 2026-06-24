@@ -12,13 +12,13 @@ Generated from local sample data. No internet access, private CV, live coding-ag
 
 ## Top Matches
 
-### Mercari - Machine Learning Engineer, Search and Recommendations
+### Kumo Market - Machine Learning Engineer, Search and Recommendations
 
 - Location: Tokyo, Japan
 - Source: demo
 - Prefilter: include
 - Status: active
-- Original JD: https://example.com/mercari/ml-platform
+- Original JD: https://example.com/kumo-market/ml-platform
 - Category: A
 - Fit score: 88
 - Role type: Product ML Engineer
@@ -28,13 +28,13 @@ Generated from local sample data. No internet access, private CV, live coding-ag
 - Risks: May expect prior production ML platform experience.; Japanese-language expectations are not clear from the demo data.
 - Prep actions: Prepare a retrieval or ranking project with evaluation metrics.; Write examples covering ML deployment, monitoring, and A/B testing.
 
-### Datadog Japan - Software Engineer, Data Platform
+### Observa Systems - Software Engineer, Data Platform
 
 - Location: Tokyo, Japan
 - Source: demo
 - Prefilter: include
 - Status: active
-- Original JD: https://example.com/datadog/data-platform
+- Original JD: https://example.com/observa/data-platform
 - Category: A
 - Fit score: 81
 - Role type: Backend / Data Platform Engineer
@@ -44,13 +44,13 @@ Generated from local sample data. No internet access, private CV, live coding-ag
 - Risks: Less directly related to NLP or LLM work.; May require stronger systems design depth than an early-career candidate has today.
 - Prep actions: Review distributed systems fundamentals and observability pipelines.; Prepare stories about debugging, reliability, and data processing tradeoffs.
 
-### Google Japan - Forward Deployed AI Engineer, Generative AI
+### Northstar AI - Forward Deployed AI Engineer, Generative AI
 
 - Location: Tokyo, Japan
 - Source: manual_demo
 - Prefilter: watch
 - Status: active
-- Original JD: https://example.com/google/fde-genai
+- Original JD: https://example.com/northstar/fde-genai
 - Category: B
 - Fit score: 67
 - Role type: Customer-facing AI Engineer
@@ -62,24 +62,24 @@ Generated from local sample data. No internet access, private CV, live coding-ag
 
 ## Needs Review
 
-### PayPay - Backend Software Engineer, Payments Platform
+### Payflow Labs - Backend Software Engineer, Payments Platform
 
 - Location: Tokyo, Japan
 - Source: demo
 - Prefilter: include
 - Status: active
-- Original JD: https://example.com/paypay/backend-payments
+- Original JD: https://example.com/payflow/backend-payments
 - Review: pending
 
 ## Watchlist
 
-### Google Japan - Forward Deployed AI Engineer, Generative AI
+### Northstar AI - Forward Deployed AI Engineer, Generative AI
 
 - Location: Tokyo, Japan
 - Source: manual_demo
 - Prefilter: watch
 - Status: active
-- Original JD: https://example.com/google/fde-genai
+- Original JD: https://example.com/northstar/fde-genai
 - Category: B
 - Fit score: 67
 - Role type: Customer-facing AI Engineer
@@ -91,11 +91,11 @@ Generated from local sample data. No internet access, private CV, live coding-ag
 
 ## Recently Missing / Possibly Closed
 
-### Woven by Toyota - Backend Engineer, Simulation Platform
+### Mobility Grid - Backend Engineer, Simulation Platform
 
 - Location: Tokyo, Japan
 - Source: demo
 - Prefilter: include
 - Status: missing
-- Original JD: https://example.com/woven/backend-simulation
+- Original JD: https://example.com/mobility-grid/backend-simulation
 - Review: pending

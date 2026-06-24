@@ -12,7 +12,7 @@ from rolelens.models import (
 def valid_job() -> dict[str, object]:
     return {
         "job_id": "mercari-ml-platform-001",
-        "company": "Mercari",
+        "company": "Kumo Market",
         "title": "Machine Learning Engineer",
         "location": "Tokyo, Japan",
         "region": "Japan",
