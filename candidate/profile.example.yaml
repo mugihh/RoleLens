@@ -1,0 +1,33 @@
+target_regions:
+  - Japan
+target_roles:
+  - Software Engineer
+  - Machine Learning Engineer
+  - Backend Engineer
+  - Data Engineer
+roles_to_avoid:
+  - Solutions Engineer
+  - Sales Engineer
+  - Technical Account Manager
+target_sources:
+  - mercari
+  - paypay
+  - woven_by_toyota
+  - datadog_japan
+  - google_japan
+  - amazon_japan
+language_preferences:
+  english: preferred
+  japanese: nice_to_have
+work_authorization:
+  japan_visa_support: preferred
+remote_preferences:
+  - hybrid
+  - remote_japan
+compensation_importance: high
+review_dimensions:
+  - nlp_relevance
+  - ml_relevance
+  - english_friendliness
+  - visa_or_pr_relevance
+  - compensation_signal

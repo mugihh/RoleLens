@@ -2,7 +2,9 @@ from pathlib import Path
 
 import typer
 
+from rolelens.manual_import import import_manual_jobs
 from rolelens.reports import generate_demo_report
+from rolelens.setup_check import run_setup_check
 
 app = typer.Typer(
     help="RoleLens: a local-first, agent-assisted job radar for technical roles."
@@ -41,6 +43,46 @@ def demo(
     )
     typer.echo(f"- {result.markdown_path}")
     typer.echo(f"- {result.html_path}")
+
+
+@app.command("setup-check")
+def setup_check(
+    root: Path = typer.Option(
+        Path("."),
+        "--root",
+        help="RoleLens project root to validate.",
+    ),
+) -> None:
+    """Validate local RoleLens setup readiness."""
+    result = run_setup_check(root)
+    for message in result.messages:
+        typer.echo(message)
+    if not result.ok:
+        raise typer.Exit(code=1)
+
+
+@app.command("import-manual")
+def import_manual(
+    imports_dir: Path = typer.Argument(
+        Path("imports/manual"),
+        help="Directory containing manual Markdown or JSON job imports.",
+    ),
+    output_path: Path = typer.Option(
+        Path("data/jobs_raw.json"),
+        "--output",
+        help="Path where normalized manual jobs will be written.",
+    ),
+) -> None:
+    """Import manually captured jobs from Markdown frontmatter or JSON."""
+    result = import_manual_jobs(imports_dir, output_path)
+    for message in result.messages:
+        typer.echo(message)
+    typer.echo(
+        f"Imported {result.imported_count} manual job(s) "
+        f"to {result.output_path}"
+    )
+    if result.skipped_count:
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":

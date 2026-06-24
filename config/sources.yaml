@@ -1,0 +1,50 @@
+companies:
+  mercari:
+    name: Mercari
+    source_type: greenhouse
+    source_id: mercari
+    regions: [Japan]
+    status: experimental
+    tags: [japan_pr, product_engineering]
+  paypay:
+    name: PayPay
+    source_type: custom
+    source_id: paypay
+    regions: [Japan]
+    status: experimental
+    tags: [japan_pr, payments, product_engineering]
+  woven_by_toyota:
+    name: Woven by Toyota
+    source_type: custom
+    source_id: woven_by_toyota
+    regions: [Japan]
+    status: experimental
+    tags: [japan_pr, platform_engineering]
+  datadog_japan:
+    name: Datadog Japan
+    source_type: greenhouse
+    source_id: datadog
+    regions: [Japan]
+    status: experimental
+    tags: [apac_bigtech, infrastructure]
+  cloudflare_japan:
+    name: Cloudflare Japan
+    source_type: greenhouse
+    source_id: cloudflare
+    regions: [Japan]
+    status: manual_or_experimental
+    tags: [apac_bigtech, infrastructure]
+  google_japan:
+    name: Google Japan
+    source_type: manual
+    source_id: google_japan
+    regions: [Japan]
+    status: manual_or_experimental
+    tags: [apac_bigtech, manual_import]
+  amazon_japan:
+    name: Amazon / AWS Japan
+    source_type: manual
+    source_id: amazon_japan
+    regions: [Japan]
+    status: manual_or_experimental
+    tags: [apac_bigtech, manual_import]
