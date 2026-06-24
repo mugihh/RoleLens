@@ -5,6 +5,7 @@ import typer
 from rolelens.manual_import import import_manual_jobs
 from rolelens.reports import generate_demo_report
 from rolelens.review_queue import export_review_queue
+from rolelens.reviews import import_reviews
 from rolelens.setup_check import run_setup_check
 
 app = typer.Typer(
@@ -108,6 +109,40 @@ def export_review_queue_command(
         f"Exported {result.exported_count} job(s) to {result.output_dir} "
         f"({result.skipped_count} skipped)"
     )
+
+
+@app.command("import-reviews")
+def import_reviews_command(
+    review_results_dir: Path = typer.Argument(
+        Path("review_results"),
+        help="Directory containing agent-generated *.review.json files.",
+    ),
+    jobs_path: Path = typer.Option(
+        Path("data/jobs_raw.json"),
+        "--jobs",
+        help="Path to normalized jobs JSON used to validate job IDs.",
+    ),
+    output_dir: Path = typer.Option(
+        Path("data/reviews"),
+        "--output-dir",
+        "-o",
+        help="Directory where validated reviews will be stored.",
+    ),
+) -> None:
+    """Validate and persist agent-generated review JSON."""
+    try:
+        result = import_reviews(review_results_dir, jobs_path, output_dir)
+    except ValueError as exc:
+        typer.echo(f"ERROR {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    for message in result.messages:
+        typer.echo(message)
+    typer.echo(
+        f"Imported {result.imported_count} review(s) to {result.output_dir} "
+        f"({result.warning_count} warning(s), {result.skipped_count} skipped)"
+    )
+    if result.skipped_count:
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
