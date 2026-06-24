@@ -22,6 +22,15 @@ def export_review_queue(
     output_dir: Path,
 ) -> ReviewQueueResult:
     jobs = _load_jobs(jobs_path)
+    return export_review_queue_for_jobs(jobs, output_dir)
+
+
+def export_review_queue_for_jobs(
+    jobs: list[JobRecord],
+    output_dir: Path,
+    queue_states: dict[str, str] | None = None,
+) -> ReviewQueueResult:
+    queue_states = queue_states or {}
     output_dir.mkdir(parents=True, exist_ok=True)
 
     exported_count = 0
@@ -29,6 +38,12 @@ def export_review_queue(
     messages: list[str] = []
 
     for job in jobs:
+        queue_state = queue_states.get(job.job_id, "unreviewed")
+        if queue_state not in {"new", "changed", "unreviewed", "needs_rereview"}:
+            skipped_count += 1
+            messages.append(f"SKIP {job.job_id}: queue_state={queue_state}")
+            continue
+
         prefilter = prefilter_job(job)
         if prefilter.status == PrefilterStatus.EXCLUDE:
             skipped_count += 1
@@ -46,13 +61,14 @@ def export_review_queue(
             "watch": prefilter.watch_matches,
             "negative": prefilter.negative_matches,
         }
+        job_payload["queue_state"] = queue_state
 
         job_path.write_text(
             json.dumps(job_payload, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
         prompt_path.write_text(
-            _render_review_prompt(normalized_job, prefilter),
+            _render_review_prompt(normalized_job, prefilter, queue_state),
             encoding="utf-8",
         )
         exported_count += 1
@@ -73,7 +89,11 @@ def _load_jobs(path: Path) -> list[JobRecord]:
     return [JobRecord.model_validate(item) for item in data]
 
 
-def _render_review_prompt(job: JobRecord, prefilter: PrefilterResult) -> str:
+def _render_review_prompt(
+    job: JobRecord,
+    prefilter: PrefilterResult,
+    queue_state: str,
+) -> str:
     warning = ""
     if prefilter.status == PrefilterStatus.WATCH:
         warning = (
@@ -101,6 +121,7 @@ external research was explicitly authorized.
 - URL: {job.url}
 - Prefilter status: {prefilter.status}
 - Prefilter reasons: {'; '.join(prefilter.reasons)}
+- Queue state: {queue_state}
 {warning}
 ## Rubric
 

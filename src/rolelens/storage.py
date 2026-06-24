@@ -187,6 +187,13 @@ class SQLiteStore:
             for row in rows
         ]
 
+    def load_reviews(self) -> list[ReviewRecord]:
+        rows = self.connection.execute("SELECT payload FROM reviews ORDER BY job_id")
+        return [
+            ReviewRecord.model_validate(json.loads(row["payload"]))
+            for row in rows
+        ]
+
     def _get_job_row(self, job_id: str) -> sqlite3.Row | None:
         return self.connection.execute(
             "SELECT * FROM jobs WHERE job_id = ?",

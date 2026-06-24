@@ -48,6 +48,14 @@ def generate_personal_report(
     ]
     reviews_by_job_id = {review["job_id"]: review for review in reviews}
 
+    return generate_latest_report_from_records(jobs, reviews_by_job_id, output_dir)
+
+
+def generate_latest_report_from_records(
+    jobs: list[dict[str, Any]],
+    reviews_by_job_id: dict[str, dict[str, Any]],
+    output_dir: Path,
+) -> ReportResult:
     return generate_report(
         jobs=jobs,
         reviews_by_job_id=reviews_by_job_id,

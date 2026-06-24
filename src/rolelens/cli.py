@@ -7,6 +7,7 @@ from rolelens.reports import generate_demo_report, generate_personal_report
 from rolelens.review_queue import export_review_queue
 from rolelens.reviews import import_reviews
 from rolelens.setup_check import run_setup_check
+from rolelens.update import run_update
 
 app = typer.Typer(
     help="RoleLens: a local-first, agent-assisted job radar for technical roles."
@@ -85,6 +86,52 @@ def import_manual(
     )
     if result.skipped_count:
         raise typer.Exit(code=1)
+
+
+@app.command("update")
+def update_command(
+    imports_dir: Path = typer.Option(
+        Path("imports/manual"),
+        "--imports-dir",
+        help="Directory containing manual Markdown or JSON job imports.",
+    ),
+    jobs_path: Path = typer.Option(
+        Path("data/jobs_raw.json"),
+        "--jobs-output",
+        help="Path where normalized imported jobs will be written.",
+    ),
+    database_path: Path = typer.Option(
+        Path("data/rolelens.sqlite"),
+        "--database",
+        help="Local SQLite database path.",
+    ),
+    review_queue_dir: Path = typer.Option(
+        Path("review_queue"),
+        "--review-queue-dir",
+        help="Directory where review queue files will be written.",
+    ),
+    reports_dir: Path = typer.Option(
+        Path("reports"),
+        "--reports-dir",
+        help="Directory where preliminary latest reports will be written.",
+    ),
+) -> None:
+    """Prepare review queue and preliminary report from local sources."""
+    result = run_update(
+        imports_dir=imports_dir,
+        jobs_path=jobs_path,
+        database_path=database_path,
+        review_queue_dir=review_queue_dir,
+        reports_dir=reports_dir,
+    )
+    typer.echo(f"Updated database: {result.database_path}")
+    for job_id, state in sorted(result.scan_states.items()):
+        typer.echo(f"{state.upper()} {job_id}")
+    typer.echo(
+        f"Exported {result.queue_result.exported_count} review queue job(s) "
+        f"to {result.queue_result.output_dir}"
+    )
+    typer.echo(f"Generated preliminary report: {result.report_result.html_path}")
 
 
 @app.command("export-review-queue")
