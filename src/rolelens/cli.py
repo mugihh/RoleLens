@@ -4,6 +4,7 @@ import typer
 
 from rolelens.manual_import import import_manual_jobs
 from rolelens.reports import generate_demo_report
+from rolelens.review_queue import export_review_queue
 from rolelens.setup_check import run_setup_check
 
 app = typer.Typer(
@@ -83,6 +84,30 @@ def import_manual(
     )
     if result.skipped_count:
         raise typer.Exit(code=1)
+
+
+@app.command("export-review-queue")
+def export_review_queue_command(
+    jobs_path: Path = typer.Option(
+        Path("data/jobs_raw.json"),
+        "--jobs",
+        help="Path to normalized jobs JSON.",
+    ),
+    output_dir: Path = typer.Option(
+        Path("review_queue"),
+        "--output-dir",
+        "-o",
+        help="Directory where review queue files will be written.",
+    ),
+) -> None:
+    """Export machine-readable jobs and agent-readable review prompts."""
+    result = export_review_queue(jobs_path, output_dir)
+    for message in result.messages:
+        typer.echo(message)
+    typer.echo(
+        f"Exported {result.exported_count} job(s) to {result.output_dir} "
+        f"({result.skipped_count} skipped)"
+    )
 
 
 if __name__ == "__main__":
