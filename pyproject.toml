@@ -10,6 +10,7 @@ readme = "ROLELENS_V1_SPEC.md"
 requires-python = ">=3.11"
 dependencies = [
   "click>=8.0.0",
+  "pydantic>=2.0.0",
   "typer>=0.12.0",
 ]
 

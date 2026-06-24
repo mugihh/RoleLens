@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from rolelens.models import JobRecord, ReviewRecord
+
 
 @dataclass(frozen=True)
 class DemoReportResult:
@@ -20,8 +22,8 @@ def generate_demo_report(
     reviews_path: Path,
     output_dir: Path,
 ) -> DemoReportResult:
-    jobs = _load_json_list(jobs_path)
-    reviews = _load_json_list(reviews_path)
+    jobs = [job.model_dump(mode="json") for job in _load_jobs(jobs_path)]
+    reviews = [review.model_dump(mode="json") for review in _load_reviews(reviews_path)]
     reviews_by_job_id = {review["job_id"]: review for review in reviews}
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -47,6 +49,14 @@ def _load_json_list(path: Path) -> list[dict[str, Any]]:
     if not isinstance(data, list):
         raise ValueError(f"Expected a JSON list in {path}")
     return data
+
+
+def _load_jobs(path: Path) -> list[JobRecord]:
+    return [JobRecord.model_validate(item) for item in _load_json_list(path)]
+
+
+def _load_reviews(path: Path) -> list[ReviewRecord]:
+    return [ReviewRecord.model_validate(item) for item in _load_json_list(path)]
 
 
 def _render_markdown(
