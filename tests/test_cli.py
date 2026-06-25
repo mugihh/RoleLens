@@ -54,3 +54,100 @@ def test_help_hides_export_review_queue() -> None:
 
     assert result.exit_code == 0
     assert "export-review-queue" not in result.output
+
+
+def test_import_manual_private_root_uses_overlay_defaults(tmp_path) -> None:
+    private_root = tmp_path / "private"
+    imports_dir = private_root / "imports" / "manual"
+    imports_dir.mkdir(parents=True)
+    (imports_dir / "job.md").write_text(
+        """---
+company: Example
+title: Software Engineer
+location: Tokyo, Japan
+url: https://example.com/job
+source: manual
+---
+
+Build Python services and developer tools.
+""",
+        encoding="utf-8",
+    )
+
+    result = CliRunner().invoke(
+        app,
+        ["import-manual", "--private-root", str(private_root)],
+    )
+
+    assert result.exit_code == 0
+    assert (private_root / "data" / "jobs_raw.json").exists()
+    assert "Imported 1 manual job(s)" in result.output
+
+
+def test_import_manual_explicit_paths_override_private_root(tmp_path) -> None:
+    private_root = tmp_path / "private"
+    explicit_imports = tmp_path / "explicit_imports"
+    explicit_output = tmp_path / "explicit_data" / "jobs.json"
+    explicit_imports.mkdir()
+    (explicit_imports / "job.md").write_text(
+        """---
+company: Explicit
+title: Backend Engineer
+location: Tokyo, Japan
+url: https://example.com/explicit
+source: manual
+---
+
+Build backend systems.
+""",
+        encoding="utf-8",
+    )
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "import-manual",
+            str(explicit_imports),
+            "--output",
+            str(explicit_output),
+            "--private-root",
+            str(private_root),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert explicit_output.exists()
+    assert not (private_root / "data" / "jobs_raw.json").exists()
+
+
+def test_report_private_root_uses_overlay_database_and_reports(tmp_path) -> None:
+    private_root = tmp_path / "private"
+    imports_dir = private_root / "imports" / "manual"
+    imports_dir.mkdir(parents=True)
+    (imports_dir / "job.md").write_text(
+        """---
+company: Example
+title: Machine Learning Engineer
+location: Tokyo, Japan
+url: https://example.com/ml
+source: manual
+---
+
+Build ML evaluation pipelines.
+""",
+        encoding="utf-8",
+    )
+    update_result = CliRunner().invoke(
+        app,
+        ["update", "--private-root", str(private_root), "--no-scan-sources"],
+    )
+    assert update_result.exit_code == 0
+
+    report_result = CliRunner().invoke(
+        app,
+        ["report", "--private-root", str(private_root)],
+    )
+
+    assert report_result.exit_code == 0
+    assert (private_root / "reports" / "latest.html").exists()
+    assert (private_root / "reports" / "latest.md").exists()

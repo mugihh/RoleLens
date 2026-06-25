@@ -18,6 +18,32 @@ app = typer.Typer(
 )
 
 
+def _overlay_path(path: Path, default: Path, private_root: Path | None) -> Path:
+    if private_root is None or path != default:
+        return path
+    return private_root / default
+
+
+def _overlay_optional_path(
+    path: Path | None,
+    default: Path,
+    private_root: Path | None,
+) -> Path | None:
+    if path is None:
+        return None
+    return _overlay_path(path, default, private_root)
+
+
+def _overlay_sources_path(path: Path, private_root: Path | None) -> Path:
+    default = Path("config/sources.yaml")
+    if private_root is None or path != default:
+        return path
+    local_sources = private_root / "config" / "sources.local.yaml"
+    if local_sources.exists():
+        return local_sources
+    return private_root / default
+
+
 @app.callback()
 def main() -> None:
     """RoleLens command line interface."""
@@ -59,9 +85,14 @@ def setup_check(
         "--root",
         help="RoleLens project root to validate.",
     ),
+    private_root: Path | None = typer.Option(
+        None,
+        "--private-root",
+        help="Private overlay root to validate instead of the public project root.",
+    ),
 ) -> None:
     """Validate local RoleLens setup readiness."""
-    result = run_setup_check(root)
+    result = run_setup_check(private_root or root)
     for message in result.messages:
         typer.echo(message)
     if not result.ok:
@@ -79,8 +110,15 @@ def import_manual(
         "--output",
         help="Path where normalized manual jobs will be written.",
     ),
+    private_root: Path | None = typer.Option(
+        None,
+        "--private-root",
+        help="Private overlay root for default input/output paths.",
+    ),
 ) -> None:
     """Import manually captured jobs from Markdown frontmatter or JSON."""
+    imports_dir = _overlay_path(imports_dir, Path("imports/manual"), private_root)
+    output_path = _overlay_path(output_path, Path("data/jobs_raw.json"), private_root)
     result = import_manual_jobs(imports_dir, output_path)
     for message in result.messages:
         typer.echo(message)
@@ -94,6 +132,11 @@ def import_manual(
 
 @app.command("update")
 def update_command(
+    private_root: Path | None = typer.Option(
+        None,
+        "--private-root",
+        help="Private overlay root for default runtime paths.",
+    ),
     imports_dir: Path = typer.Option(
         Path("imports/manual"),
         "--imports-dir",
@@ -131,6 +174,20 @@ def update_command(
     ),
 ) -> None:
     """Prepare review queue and preliminary report from local sources."""
+    imports_dir = _overlay_path(imports_dir, Path("imports/manual"), private_root)
+    jobs_path = _overlay_path(jobs_path, Path("data/jobs_raw.json"), private_root)
+    database_path = _overlay_path(
+        database_path,
+        Path("data/rolelens.sqlite"),
+        private_root,
+    )
+    review_queue_dir = _overlay_path(
+        review_queue_dir,
+        Path("review_queue"),
+        private_root,
+    )
+    reports_dir = _overlay_path(reports_dir, Path("reports"), private_root)
+    sources_path = _overlay_sources_path(sources_path, private_root)
     result = run_update(
         imports_dir=imports_dir,
         jobs_path=jobs_path,
@@ -181,6 +238,11 @@ def import_reviews_command(
         Path("review_results"),
         help="Directory containing agent-generated *.review.json files.",
     ),
+    private_root: Path | None = typer.Option(
+        None,
+        "--private-root",
+        help="Private overlay root for default input/output paths.",
+    ),
     jobs_path: Path = typer.Option(
         Path("data/jobs_raw.json"),
         "--jobs",
@@ -199,6 +261,18 @@ def import_reviews_command(
     ),
 ) -> None:
     """Validate and persist agent-generated review JSON."""
+    review_results_dir = _overlay_path(
+        review_results_dir,
+        Path("review_results"),
+        private_root,
+    )
+    jobs_path = _overlay_path(jobs_path, Path("data/jobs_raw.json"), private_root)
+    output_dir = _overlay_path(output_dir, Path("data/reviews"), private_root)
+    database_path = _overlay_path(
+        database_path,
+        Path("data/rolelens.sqlite"),
+        private_root,
+    )
     try:
         result = import_reviews(
             review_results_dir,
@@ -221,6 +295,11 @@ def import_reviews_command(
 
 @app.command("report")
 def report_command(
+    private_root: Path | None = typer.Option(
+        None,
+        "--private-root",
+        help="Private overlay root for default input/output paths.",
+    ),
     database_path: Path = typer.Option(
         Path("data/rolelens.sqlite"),
         "--database",
@@ -244,6 +323,22 @@ def report_command(
     ),
 ) -> None:
     """Generate latest personal reports from local jobs and imported reviews."""
+    database_path = _overlay_path(
+        database_path,
+        Path("data/rolelens.sqlite"),
+        private_root,
+    )
+    jobs_path = _overlay_optional_path(
+        jobs_path,
+        Path("data/jobs_raw.json"),
+        private_root,
+    )
+    reviews_dir = _overlay_optional_path(
+        reviews_dir,
+        Path("data/reviews"),
+        private_root,
+    )
+    output_dir = _overlay_path(output_dir, Path("reports"), private_root)
     try:
         if jobs_path is not None:
             result = generate_personal_report(
