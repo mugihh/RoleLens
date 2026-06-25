@@ -151,7 +151,7 @@ def update_command(
     typer.echo(f"Generated preliminary report: {result.report_result.html_path}")
 
 
-@app.command("export-review-queue")
+@app.command("export-review-queue", hidden=True)
 def export_review_queue_command(
     jobs_path: Path = typer.Option(
         Path("data/jobs_raw.json"),
