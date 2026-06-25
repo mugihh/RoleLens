@@ -9,6 +9,8 @@ RoleLens V1 is not a web app or an autonomous crawler. The CLI handles
 deterministic local steps, while a coding agent can help set up candidate
 context, review queued job descriptions, and write structured review results.
 
+![RoleLens demo report](docs/rolelens-demo.jpg)
+
 ## Demo Flow
 
 Run the demo workflow:
