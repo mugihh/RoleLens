@@ -1,6 +1,6 @@
 # RoleLens Demo Report
 
-Generated from local sample data. No internet access, private CV, live coding-agent review, or scraper output was used.
+Sample report generated from local demo data.
 
 ## Summary
 

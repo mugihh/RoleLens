@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fafafa;
+      --panel: #ffffff;
+      --text: #2d2d2d;
+      --primary: #090909;
+      --secondary: #737373;
+      --muted: #9a9a9a;
+      --line: #d8d8d8;
+      --soft-line: #eaeaea;
+      --soft-fill: #f2f2f2;
+      --accent: #8a6f78;
+      --accent-gradient: linear-gradient(90deg, #090909, #8a6f78, #090909);
+      --include: #355c7d;
+      --include-soft: #e9f0f6;
+      --watch: #5d6f86;
+      --watch-soft: #eef2f6;
+      --avoid: #7b8794;
+      --avoid-soft: #f1f3f5;
+      --font-sans: Raleway, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.62;
+      text-rendering: optimizeLegibility;
+    }
+    .scroll-progress {
+      background: var(--soft-line);
+      height: 2px;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+    }
+    .scroll-progress::after {
+      background: var(--accent-gradient);
+      content: "";
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      transform: scaleX(var(--scroll-progress, 0));
+      transform-origin: left;
+      width: 100%;
+    }
+    main {
+      width: min(860px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 42px 0 58px;
+    }
+    header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: min(300px, 42vh);
+      text-align: center;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      color: var(--primary);
+      font-family: var(--font-serif);
+      font-size: clamp(2.35rem, 5.4vw, 4rem);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1;
+      margin: 0 auto 0.85rem;
+      max-width: 680px;
+    }
+    h2 {
+      align-items: baseline;
+      color: var(--primary);
+      display: flex;
+      font-family: var(--font-serif);
+      font-size: clamp(1.45rem, 3.2vw, 2rem);
+      font-weight: 400;
+      gap: 0.9rem;
+      letter-spacing: 0;
+      line-height: 1;
+      margin: 4.35rem 0 1.3rem;
+      padding-bottom: 0.7rem;
+      position: relative;
+    }
+    h2::after {
+      background: var(--line);
+      bottom: 0;
+      content: "";
+      height: 1px;
+      left: 0;
+      position: absolute;
+      width: 100%;
+    }
+    h2 span {
+      color: var(--muted);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    h3 {
+      color: var(--primary);
+      font-size: clamp(1.12rem, 2vw, 1.42rem);
+      font-weight: 650;
+      line-height: 1.28;
+      margin-bottom: 0.75rem;
+    }
+    a {
+      color: var(--primary);
+      text-decoration-color: rgba(138, 111, 120, 0.52);
+      text-underline-offset: 4px;
+    }
+    a:hover { text-decoration-color: var(--primary); }
+    .lede {
+      color: var(--secondary);
+      font-size: 0.98rem;
+      margin: 0 auto;
+      max-width: 560px;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 0 0 1.4rem;
+    }
+    .metric, .job {
+      background: var(--panel);
+      border: 1px solid var(--soft-line);
+      border-radius: 8px;
+    }
+    .metric {
+      min-height: 82px;
+      padding: 14px 15px;
+    }
+    .metric strong {
+      color: var(--primary);
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 2.1rem;
+      font-weight: 400;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .metric span {
+      color: var(--secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+    .job {
+      padding: clamp(18px, 4vw, 26px);
+      transition:
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
+    }
+    .job:hover {
+      border-color: var(--line);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.055);
+      transform: translateY(-1px);
+    }
+    .job-layout {
+      align-items: start;
+      display: grid;
+      gap: 1.15rem;
+      grid-template-columns: 76px 1fr;
+    }
+    .job-main {
+      min-width: 0;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.52rem;
+      margin-bottom: 1rem;
+      color: var(--secondary);
+      font-size: 0.82rem;
+    }
+    .meta span {
+      align-items: center;
+      display: inline-flex;
+      gap: 0.52rem;
+    }
+    .meta span:not(:last-child)::after {
+      color: var(--line);
+      content: "/";
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 8px;
+      padding: 0.3rem 0.62rem;
+      background: var(--soft-fill);
+      color: var(--secondary);
+      font-size: 0.74rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .badge-row {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0 0 1rem;
+    }
+    .category-a, .include { background: var(--include-soft); color: var(--include); }
+    .category-b, .watch { background: var(--watch-soft); color: var(--watch); }
+    .exclude { background: var(--avoid-soft); color: var(--avoid); }
+    .score {
+      color: var(--primary);
+      font-family: var(--font-serif);
+      font-size: 2.55rem;
+      font-weight: 400;
+      line-height: 0.9;
+    }
+    .score-inline {
+      border-right: 1px solid var(--soft-line);
+      padding-right: 1rem;
+      text-align: left;
+    }
+    .score-label {
+      color: var(--muted);
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-top: 0.35rem;
+      text-transform: uppercase;
+    }
+    .role-type {
+      color: var(--primary);
+      font-weight: 650;
+      margin-bottom: 0.25rem;
+    }
+    .signals {
+      color: var(--secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+    .section-list {
+      padding-left: 1.1rem;
+      margin: 0.45rem 0 1.05rem;
+    }
+    .section-list li { margin-bottom: 0.32rem; }
+    .detail-title {
+      color: var(--primary);
+      font-size: 0.84rem;
+      font-weight: 700;
+      margin: 1.15rem 0 0;
+    }
+    .empty {
+      padding: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.66);
+    }
+    .job-link {
+      margin: 0 0 1rem;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+    @media (max-width: 640px) {
+      main {
+        width: min(100% - 28px, 860px);
+        padding-top: 52px;
+      }
+      header {
+        min-height: 280px;
+      }
+      .summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .job-layout {
+        grid-template-columns: 1fr;
+      }
+      .score-inline {
+        border-bottom: 1px solid var(--soft-line);
+        border-right: 0;
+        padding-bottom: 0.75rem;
+        padding-right: 0;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <main>
+    <header>
+      <h1>{{ title }}</h1>
+      <p class="lede">{{ lede }}</p>
+    </header>
+    <section class="summary" aria-label="Report summary">
+      {% for metric in metrics %}
+      <div class="metric"><strong>{{ metric.value }}</strong><span>{{ metric.label }}</span></div>
+      {% endfor %}
+    </section>
+    {% for section in sections %}
+    <section class="content-section">
+      <h2><span>{{ section.number }}</span>{{ section.title }}</h2>
+      {% if section.jobs %}
+      <div class="grid">
+        {% for item in section.jobs %}
+        <article class="job">
+          <div class="job-layout">
+            <div class="score-inline">
+              <div class="score">{{ item.fit_score_display }}</div>
+              <span class="score-label">{{ item.score_label }}</span>
+            </div>
+            <div class="job-main">
+              <h3>{{ item.company }} - {{ item.title }}</h3>
+              <div class="meta">
+                <span>{{ item.location }}</span>
+                <span>{{ item.source }}</span>
+                <span>{{ item.status }}</span>
+              </div>
+              <div class="badge-row"><span class="badge {{ item.prefilter_status }}">{{ item.prefilter_label }}</span></div>
+              {% if item.review %}
+              <div class="badge-row">
+                <span class="badge category-{{ item.review.category | lower }}">Category {{ item.review.category }}</span>
+              </div>
+              <p class="role-type">{{ item.review.role_type }}</p>
+              <p class="signals">Coding intensity: {{ item.review.coding_intensity }}<br>
+              Customer-facing level: {{ item.review.customer_facing_level }}</p>
+              <p class="job-link"><a href="{{ item.url }}">Original JD</a></p>
+              {% for block in item.detail_blocks %}
+              <p class="detail-title">{{ block["title"] }}</p>
+              <ul class="section-list">
+                {% for entry in block["items"] %}
+                <li>{{ entry }}</li>
+                {% endfor %}
+              </ul>
+              {% endfor %}
+              {% else %}
+              <p class="empty">Review pending.</p>
+              <p class="job-link"><a href="{{ item.url }}">Original JD</a></p>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty">No jobs in this section.</div>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </main>
+  <script>
+    const updateScrollProgress = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+      document.documentElement.style.setProperty("--scroll-progress", Math.min(Math.max(progress, 0), 1).toString());
+    };
+    updateScrollProgress();
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
+  </script>
+</body>
+</html>
