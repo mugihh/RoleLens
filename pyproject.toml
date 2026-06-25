@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "rolelens"
 version = "0.1.0"
 description = "Local-first, agent-assisted job radar for technical roles."
-readme = "ROLELENS_V1_SPEC.md"
+readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
   "click>=8.0.0",
