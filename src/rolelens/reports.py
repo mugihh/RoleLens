@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from rolelens.models import JobRecord, ReviewRecord
+from rolelens.storage import SQLiteStore
 
 
 @dataclass(frozen=True)
@@ -47,6 +48,23 @@ def generate_personal_report(
         for review in _load_review_dir(reviews_dir)
     ]
     reviews_by_job_id = {review["job_id"]: review for review in reviews}
+
+    return generate_latest_report_from_records(jobs, reviews_by_job_id, output_dir)
+
+
+def generate_sqlite_report(
+    database_path: Path,
+    output_dir: Path,
+) -> ReportResult:
+    store = SQLiteStore(database_path)
+    try:
+        jobs = [job.model_dump(mode="json") for job in store.load_jobs()]
+        reviews_by_job_id = {
+            review.job_id: review.model_dump(mode="json")
+            for review in store.load_reviews()
+        }
+    finally:
+        store.close()
 
     return generate_latest_report_from_records(jobs, reviews_by_job_id, output_dir)
 

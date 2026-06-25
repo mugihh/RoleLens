@@ -6,6 +6,7 @@ import pytest
 
 from rolelens.models import JobRecord, PrefilterStatus
 from rolelens.reviews import import_reviews
+from rolelens.storage import SQLiteStore
 
 
 def write_jobs(path: Path) -> None:
@@ -73,6 +74,39 @@ def test_import_reviews_validates_and_persists_reviews(tmp_path: Path) -> None:
         )
     )
     assert persisted["fit_score"] == 84
+
+
+def test_import_reviews_updates_sqlite_review_metadata(tmp_path: Path) -> None:
+    jobs_path = tmp_path / "jobs_raw.json"
+    write_jobs(jobs_path)
+    database_path = tmp_path / "rolelens.sqlite"
+    store = SQLiteStore(database_path)
+    store.sync_jobs(
+        [JobRecord.model_validate(json.loads(jobs_path.read_text())[0])],
+        date(2026, 6, 24),
+    )
+    store.close()
+    review_results_dir = tmp_path / "review_results"
+    review_results_dir.mkdir()
+    (review_results_dir / "backend-1.review.json").write_text(
+        json.dumps(valid_review()),
+        encoding="utf-8",
+    )
+
+    result = import_reviews(
+        review_results_dir,
+        jobs_path,
+        tmp_path / "reviews",
+        database_path=database_path,
+    )
+
+    store = SQLiteStore(database_path)
+    try:
+        assert result.imported_count == 1
+        assert store.queue_state("backend-1") == "reviewed"
+        assert store.load_review_metadata()["backend-1"].reviewed_at == date(2026, 6, 24)
+    finally:
+        store.close()
 
 
 def test_import_reviews_warns_but_imports_consistency_issues(tmp_path: Path) -> None:

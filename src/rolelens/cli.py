@@ -3,7 +3,11 @@ from pathlib import Path
 import typer
 
 from rolelens.manual_import import import_manual_jobs
-from rolelens.reports import generate_demo_report, generate_personal_report
+from rolelens.reports import (
+    generate_demo_report,
+    generate_personal_report,
+    generate_sqlite_report,
+)
 from rolelens.review_queue import export_review_queue
 from rolelens.reviews import import_reviews
 from rolelens.setup_check import run_setup_check
@@ -175,10 +179,20 @@ def import_reviews_command(
         "-o",
         help="Directory where validated reviews will be stored.",
     ),
+    database_path: Path = typer.Option(
+        Path("data/rolelens.sqlite"),
+        "--database",
+        help="Local SQLite database path to update with review metadata.",
+    ),
 ) -> None:
     """Validate and persist agent-generated review JSON."""
     try:
-        result = import_reviews(review_results_dir, jobs_path, output_dir)
+        result = import_reviews(
+            review_results_dir,
+            jobs_path,
+            output_dir,
+            database_path=database_path,
+        )
     except ValueError as exc:
         typer.echo(f"ERROR {exc}", err=True)
         raise typer.Exit(code=1) from exc
@@ -194,15 +208,20 @@ def import_reviews_command(
 
 @app.command("report")
 def report_command(
-    jobs_path: Path = typer.Option(
-        Path("data/jobs_raw.json"),
-        "--jobs",
-        help="Path to normalized jobs JSON.",
+    database_path: Path = typer.Option(
+        Path("data/rolelens.sqlite"),
+        "--database",
+        help="Local SQLite database path.",
     ),
-    reviews_dir: Path = typer.Option(
-        Path("data/reviews"),
+    jobs_path: Path | None = typer.Option(
+        None,
+        "--jobs",
+        help="Optional legacy path to normalized jobs JSON.",
+    ),
+    reviews_dir: Path | None = typer.Option(
+        None,
         "--reviews-dir",
-        help="Directory containing imported *.review.json files.",
+        help="Optional legacy directory containing imported *.review.json files.",
     ),
     output_dir: Path = typer.Option(
         Path("reports"),
@@ -213,7 +232,14 @@ def report_command(
 ) -> None:
     """Generate latest personal reports from local jobs and imported reviews."""
     try:
-        result = generate_personal_report(jobs_path, reviews_dir, output_dir)
+        if jobs_path is not None:
+            result = generate_personal_report(
+                jobs_path,
+                reviews_dir or Path("data/reviews"),
+                output_dir,
+            )
+        else:
+            result = generate_sqlite_report(database_path, output_dir)
     except ValueError as exc:
         typer.echo(f"ERROR {exc}", err=True)
         raise typer.Exit(code=1) from exc
