@@ -7,6 +7,7 @@ PUBLIC_COMMANDS = [
     "demo",
     "setup-check",
     "update",
+    "triage",
     "import-manual",
     "import-reviews",
     "report",
@@ -151,3 +152,63 @@ Build ML evaluation pipelines.
     assert report_result.exit_code == 0
     assert (private_root / "reports" / "latest.html").exists()
     assert (private_root / "reports" / "latest.md").exists()
+
+
+def test_triage_private_root_writes_review_plan(tmp_path) -> None:
+    private_root = tmp_path / "private"
+    imports_dir = private_root / "imports" / "manual"
+    candidate_dir = private_root / "candidate"
+    imports_dir.mkdir(parents=True)
+    candidate_dir.mkdir(parents=True)
+    (candidate_dir / "profile.yaml").write_text(
+        """target_roles:
+  - Machine Learning Engineer
+roles_to_avoid:
+  - Sales Engineer
+""",
+        encoding="utf-8",
+    )
+    (imports_dir / "ml.md").write_text(
+        """---
+company: Example
+title: Machine Learning Engineer
+location: Tokyo, Japan
+url: https://example.com/ml
+source: manual
+---
+
+Build ML evaluation pipelines.
+""",
+        encoding="utf-8",
+    )
+    (imports_dir / "sales.md").write_text(
+        """---
+company: Example
+title: Sales Engineer
+location: Tokyo, Japan
+url: https://example.com/sales
+source: manual
+---
+
+Support sales teams.
+""",
+        encoding="utf-8",
+    )
+    update_result = CliRunner().invoke(
+        app,
+        ["update", "--private-root", str(private_root), "--no-scan-sources"],
+    )
+    assert update_result.exit_code == 0
+
+    result = CliRunner().invoke(
+        app,
+        ["triage", "--private-root", str(private_root), "--limit", "5"],
+    )
+
+    assert result.exit_code == 0
+    review_plan = private_root / "reports" / "review_plan.md"
+    assert review_plan.exists()
+    text = review_plan.read_text(encoding="utf-8")
+    assert "## Likely" in text
+    assert "Machine Learning Engineer" in text
+    assert "Title matches profile roles_to_avoid" in text

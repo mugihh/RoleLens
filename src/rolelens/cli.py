@@ -11,6 +11,7 @@ from rolelens.reports import (
 from rolelens.review_queue import export_review_queue
 from rolelens.reviews import import_reviews
 from rolelens.setup_check import run_setup_check
+from rolelens.triage import generate_review_plan
 from rolelens.update import run_update
 
 app = typer.Typer(
@@ -206,6 +207,77 @@ def update_command(
         f"to {result.queue_result.output_dir}"
     )
     typer.echo(f"Generated preliminary report: {result.report_result.html_path}")
+
+
+@app.command("triage")
+def triage_command(
+    private_root: Path | None = typer.Option(
+        None,
+        "--private-root",
+        help="Private overlay root for default input/output paths.",
+    ),
+    jobs_path: Path = typer.Option(
+        Path("data/jobs_raw.json"),
+        "--jobs",
+        help="Path to normalized jobs JSON.",
+    ),
+    profile_path: Path | None = typer.Option(
+        Path("candidate/profile.yaml"),
+        "--profile",
+        help="Optional candidate profile used to guide triage.",
+    ),
+    review_results_dir: Path = typer.Option(
+        Path("review_results"),
+        "--review-results-dir",
+        help="Directory containing existing *.review.json files.",
+    ),
+    output_path: Path = typer.Option(
+        Path("reports/review_plan.md"),
+        "--output",
+        "-o",
+        help="Path where the token-saving review plan will be written.",
+    ),
+    limit: int = typer.Option(
+        20,
+        "--limit",
+        help="Maximum likely/maybe jobs to show in each section.",
+    ),
+    snippet_chars: int = typer.Option(
+        600,
+        "--snippet-chars",
+        help="Maximum JD snippet characters to include per job.",
+    ),
+) -> None:
+    """Generate a token-saving review plan before agent full review."""
+    jobs_path = _overlay_path(jobs_path, Path("data/jobs_raw.json"), private_root)
+    profile_path = _overlay_optional_path(
+        profile_path,
+        Path("candidate/profile.yaml"),
+        private_root,
+    )
+    review_results_dir = _overlay_path(
+        review_results_dir,
+        Path("review_results"),
+        private_root,
+    )
+    output_path = _overlay_path(
+        output_path,
+        Path("reports/review_plan.md"),
+        private_root,
+    )
+    result = generate_review_plan(
+        jobs_path=jobs_path,
+        profile_path=profile_path,
+        review_results_dir=review_results_dir,
+        output_path=output_path,
+        limit=limit,
+        snippet_chars=snippet_chars,
+    )
+    typer.echo(f"Generated review plan: {result.output_path}")
+    typer.echo(f"- likely: {result.likely_count}")
+    typer.echo(f"- maybe: {result.maybe_count}")
+    typer.echo(f"- skip: {result.skip_count}")
+    typer.echo(f"- already_reviewed: {result.already_reviewed_count}")
 
 
 @app.command("export-review-queue", hidden=True)

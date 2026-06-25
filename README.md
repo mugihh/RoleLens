@@ -71,12 +71,15 @@ job descriptions.
 ```bash
 rolelens setup-check
 rolelens update
+rolelens triage
 ```
 
-6. The agent reviews queued jobs in `review_queue/*.prompt.md` using
+6. Read `reports/review_plan.md` first and choose a small `likely` set for
+   full agent review.
+7. The agent reviews selected queued jobs in `review_queue/*.prompt.md` using
    `prompts/reviewer.md`.
-7. The agent writes one structured result per job under `review_results/`.
-8. Import reviews and regenerate the report:
+8. The agent writes one structured result per job under `review_results/`.
+9. Import reviews and regenerate the report:
 
 ```bash
 rolelens import-reviews review_results/
@@ -137,6 +140,7 @@ RoleLens V1 keeps the public command surface small:
 rolelens demo
 rolelens setup-check
 rolelens update
+rolelens triage
 rolelens import-manual imports/manual/
 rolelens import-reviews review_results/
 rolelens report
@@ -147,6 +151,7 @@ Command summary:
 - `demo`: generate demo reports from committed sample data.
 - `setup-check`: validate local candidate files, source config, and runtime directories.
 - `update`: import local jobs, scan configured sources, update SQLite, export a review queue, and generate a preliminary report.
+- `triage`: generate a token-saving `reports/review_plan.md` before full agent review.
 - `import-manual`: normalize Markdown frontmatter or JSON manual imports.
 - `import-reviews`: validate agent-generated review JSON and persist it locally.
 - `report`: regenerate latest HTML/Markdown reports from local data.
