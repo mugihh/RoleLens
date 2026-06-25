@@ -119,6 +119,16 @@ def update_command(
         "--reports-dir",
         help="Directory where preliminary latest reports will be written.",
     ),
+    sources_path: Path = typer.Option(
+        Path("config/sources.yaml"),
+        "--sources",
+        help="Source config for supported scanners.",
+    ),
+    scan_sources: bool = typer.Option(
+        True,
+        "--scan-sources/--no-scan-sources",
+        help="Scan configured sources in addition to manual imports.",
+    ),
 ) -> None:
     """Prepare review queue and preliminary report from local sources."""
     result = run_update(
@@ -127,8 +137,11 @@ def update_command(
         database_path=database_path,
         review_queue_dir=review_queue_dir,
         reports_dir=reports_dir,
+        sources_path=sources_path if scan_sources else None,
     )
     typer.echo(f"Updated database: {result.database_path}")
+    for message in result.messages:
+        typer.echo(message)
     for job_id, state in sorted(result.scan_states.items()):
         typer.echo(f"{state.upper()} {job_id}")
     typer.echo(

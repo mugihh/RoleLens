@@ -37,6 +37,10 @@ data/jobs_raw.json
 data/jobs_seen.json
 data/reviews/
 
+# Private/local source lists
+config/sources.local.yaml
+config/private_sources.yaml
+
 # Runtime manual imports
 imports/manual/*
 !imports/manual/.gitkeep
@@ -57,4 +61,3 @@ reports/personal/
 .DS_Store
 .idea/
 .vscode/
-
