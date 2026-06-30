@@ -248,7 +248,8 @@ def _rank_job(job: JobRecord, settings: _ProfileSettings) -> RankedJob:
         ),
         None,
     )
-    if role is not None:
+    is_target_role = role is not None
+    if is_target_role:
         score += ROLE_SCORES[role]
         reasons.append(f"{role} title match")
     else:
@@ -259,24 +260,26 @@ def _rank_job(job: JobRecord, settings: _ProfileSettings) -> RankedJob:
         score += 35
         reasons.append("Explicit new-grad, junior, or early-career signal")
 
-    if settings.primary_regions and job.region in settings.primary_regions:
-        score += 14
-        reasons.append(f"{job.region} is a primary target region")
-
     large_company = _is_large_company(job.company, settings.large_companies)
-    if large_company:
-        score += 15
-        reasons.append("Large-company or strong engineering-brand signal")
-
     salary = _highest_salary_millions(text)
     meets_salary = salary is not None and salary >= settings.min_compensation_millions
-    if meets_salary:
-        score += min(14, int(salary))
-        reasons.append(f"Compensation signal around {salary:g}M+")
 
-    if job.source.startswith(DIRECT_SOURCE_PREFIXES):
-        score += 6
-        reasons.append("Direct company/ATS source")
+    # Positive context bonuses (region, brand, compensation, source) only apply
+    # to real target engineering roles — they must not rescue a non-coding role
+    # (e.g. a legal or manager role at a large company) into contention.
+    if is_target_role:
+        if settings.primary_regions and job.region in settings.primary_regions:
+            score += 14
+            reasons.append(f"{job.region} is a primary target region")
+        if large_company:
+            score += 15
+            reasons.append("Large-company or strong engineering-brand signal")
+        if meets_salary:
+            score += min(14, int(salary))
+            reasons.append(f"Compensation signal around {salary:g}M+")
+        if job.source.startswith(DIRECT_SOURCE_PREFIXES):
+            score += 6
+            reasons.append("Direct company/ATS source")
 
     if any(term in title_lower for term in SENIOR_TERMS):
         score -= 32
