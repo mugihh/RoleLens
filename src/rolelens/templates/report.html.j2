@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
@@ -263,6 +266,48 @@
       font-weight: 700;
       margin: 1.15rem 0 0;
     }
+    .job-priority {
+      border-color: var(--line);
+      box-shadow: 0 1px 0 var(--soft-line);
+    }
+    .job-priority::before {
+      background: var(--accent-gradient);
+      border-radius: 8px 8px 0 0;
+      content: "";
+      display: block;
+      height: 3px;
+      margin: calc(-1 * clamp(18px, 4vw, 26px)) calc(-1 * clamp(18px, 4vw, 26px)) clamp(18px, 4vw, 26px);
+    }
+    .cv-tweaks {
+      background: var(--soft-fill);
+      border: 1px solid var(--soft-line);
+      border-left: 3px solid var(--watch);
+      border-radius: 10px;
+      margin-top: 1.2rem;
+      padding: 0.8rem 1.05rem 0.9rem;
+    }
+    .cv-tweaks-title {
+      align-items: baseline;
+      color: var(--watch);
+      display: flex;
+      font-size: 0.84rem;
+      font-weight: 700;
+      gap: 0.45rem;
+      margin: 0 0 0.35rem;
+    }
+    .cv-tweaks-title em {
+      color: var(--secondary);
+      font-family: var(--font-serif);
+      font-size: 0.8rem;
+      font-style: italic;
+      font-weight: 400;
+    }
+    .cv-tweaks .section-list {
+      margin-bottom: 0;
+    }
+    .cv-tweaks .section-list li {
+      color: var(--text);
+    }
     .empty {
       padding: 18px;
       border: 1px dashed var(--line);
@@ -322,7 +367,7 @@
       {% if section.jobs %}
       <div class="grid">
         {% for item in section.jobs %}
-        <article class="job">
+        <article class="job{% if item.review and item.review.category == 'A' %} job-priority{% endif %}">
           <div class="job-layout">
             <div class="score-inline">
               <div class="score">{{ item.fit_score_display }}</div>
@@ -352,6 +397,16 @@
                 {% endfor %}
               </ul>
               {% endfor %}
+              {% if item.cv_tweaks %}
+              <div class="cv-tweaks">
+                <p class="cv-tweaks-title">Tailor your CV for this role <em>small edits</em></p>
+                <ul class="section-list">
+                  {% for tweak in item.cv_tweaks %}
+                  <li>{{ tweak }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endif %}
               {% else %}
               <p class="empty">Review pending.</p>
               <p class="job-link"><a href="{{ item.url }}">Original JD</a></p>
