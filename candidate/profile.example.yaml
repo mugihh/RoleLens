@@ -1,33 +1,106 @@
+# Example candidate profile. Copy to candidate/profile.yaml and edit.
+# This is synthetic demo data — do not commit real preferences here.
+
 target_regions:
   - Japan
+  - Singapore
+
+# How strongly each region counts. "primary" regions get a ranking bonus;
+# others are treated as secondary (see large_company_overrides_region below).
+region_preferences:
+  Japan: primary
+  Singapore: only_for_large_company_or_high_compensation
+
 target_roles:
   - Software Engineer
   - Machine Learning Engineer
+  - NLP Engineer
+  - Research Engineer
   - Backend Engineer
   - Data Engineer
+
+# Optional per-role weighting, read by triage and full review.
+role_preferences:
+  Software Engineer: preferred
+  Machine Learning Engineer: preferred
+  Research Engineer: preferred_if_engineering_heavy
+  Backend Engineer: junior_or_new_grad_friendly_only
+
+seniority_preferences:
+  - New Grad
+  - Junior
+  - Entry Level
+  - Early Career
+
 roles_to_avoid:
   - Solutions Engineer
   - Sales Engineer
   - Technical Account Manager
-target_sources:
-  - mercari
-  - paypay
-  - woven_by_toyota
-  - datadog_japan
-  - google_japan
-  - amazon_japan
+  - Customer Success Engineer
+  - Support Engineer
+  - Product Manager
+  - Pure frontend role
+  - Non-coding research-only role
+
+customer_facing_preferences:
+  max_preferred_level: low
+  notes:
+    - Internal collaboration is fine; avoid pre-sales, support escalation, or account management.
+
+# ML/NLP is preferred but NOT required. Set to true to require it.
+ml_or_nlp_required: false
+
+# If true, a large/well-known company is accepted in ANY region (region stops
+# being a filter). Salary floor, seniority, and roles_to_avoid still apply.
+large_company_overrides_region: true
+
+# Companies treated as "large / strong brand" for ranking and the inbox.
+large_companies:
+  - Example BigCo
+  - Another Large Company
+
+target_sources: []
+
 language_preferences:
   english: preferred
   japanese: nice_to_have
+
 work_authorization:
-  japan_visa_support: preferred
+  japan_visa_support: required
+  highly_skilled_professional_points: important
+  minimum_japan_compensation_jpy: 5000000
+
 remote_preferences:
   - hybrid
   - remote_japan
+
+company_preferences:
+  large_company: preferred
+  startup: acceptable_if_compensation_and_learning_are_good
+  research_team: acceptable_if_engineering_heavy
+  compensation_is_key: true
+
 compensation_importance: high
+
 review_dimensions:
-  - nlp_relevance
-  - ml_relevance
-  - english_friendliness
-  - visa_or_pr_relevance
+  - ml_nlp_relevance
+  - new_grad_or_junior_fit
+  - coding_intensity
+  - backend_ramp_up_risk
+  - customer_facing_risk
+  - visa_support_signal
   - compensation_signal
+  - company_brand_or_scale
+  - research_to_engineering_balance
+
+green_flags:
+  - New grad, junior, entry-level, or early-career explicitly accepted.
+  - Real coding ownership, production systems, platform/tooling, or research engineering.
+  - ML, NLP, data pipelines, or other target-domain work is central to the role.
+  - Visa support or compensation at or above the stated floor.
+
+red_flags:
+  - Heavy customer-facing, pre-sales, support, or account-management responsibilities.
+  - Senior/staff role expecting years of prior production ownership.
+  - Mostly frontend, project management, or non-coding coordination.
+  - Research-only role with little implementation or engineering ownership.
