@@ -27,6 +27,7 @@ Sample report generated from local demo data.
 - Reasons: Search and recommendation work matches ML/NLP-adjacent interests.; Production ML and backend ownership are explicit in the role.; Marketplace product context is strong portfolio alignment.
 - Risks: May expect prior production ML platform experience.; Japanese-language expectations are not clear from the demo data.
 - Prep actions: Prepare a retrieval or ranking project with evaluation metrics.; Write examples covering ML deployment, monitoring, and A/B testing.
+- CV tweaks: Lead with the retrieval/embeddings and evaluation-tooling experience to match the role's ranking and recommendation focus.; Reword a backend bullet to surface FastAPI services and experimentation, matching the 'production ML + backend services' framing.; Add 'A/B testing' and 'ranking/retrieval' to the skills line where legitimately backed by past projects.
 
 ### Observa Systems - Software Engineer, Data Platform
 
@@ -43,6 +44,7 @@ Sample report generated from local demo data.
 - Reasons: Coding-heavy backend and distributed systems role.; Strong signal for data infrastructure and reliability experience.; Brand and technical depth are useful for future APAC big-tech transitions.
 - Risks: Less directly related to NLP or LLM work.; May require stronger systems design depth than an early-career candidate has today.
 - Prep actions: Review distributed systems fundamentals and observability pipelines.; Prepare stories about debugging, reliability, and data processing tradeoffs.
+- CV tweaks: Surface the data-pipeline and batch-processing work near the top to match the high-volume data infrastructure focus.; Reframe a backend bullet around reliability and distributed systems rather than ML, since this role is coding/systems-heavy.; Keep PostgreSQL, Docker, and CI prominent on the skills line to evidence production backend readiness.
 
 ### Northstar AI - Forward Deployed AI Engineer, Generative AI
 

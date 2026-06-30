@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RoleLens Demo Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
@@ -263,6 +266,48 @@
       font-weight: 700;
       margin: 1.15rem 0 0;
     }
+    .job-priority {
+      border-color: var(--line);
+      box-shadow: 0 1px 0 var(--soft-line);
+    }
+    .job-priority::before {
+      background: var(--accent-gradient);
+      border-radius: 8px 8px 0 0;
+      content: "";
+      display: block;
+      height: 3px;
+      margin: calc(-1 * clamp(18px, 4vw, 26px)) calc(-1 * clamp(18px, 4vw, 26px)) clamp(18px, 4vw, 26px);
+    }
+    .cv-tweaks {
+      background: var(--soft-fill);
+      border: 1px solid var(--soft-line);
+      border-left: 3px solid var(--watch);
+      border-radius: 10px;
+      margin-top: 1.2rem;
+      padding: 0.8rem 1.05rem 0.9rem;
+    }
+    .cv-tweaks-title {
+      align-items: baseline;
+      color: var(--watch);
+      display: flex;
+      font-size: 0.84rem;
+      font-weight: 700;
+      gap: 0.45rem;
+      margin: 0 0 0.35rem;
+    }
+    .cv-tweaks-title em {
+      color: var(--secondary);
+      font-family: var(--font-serif);
+      font-size: 0.8rem;
+      font-style: italic;
+      font-weight: 400;
+    }
+    .cv-tweaks .section-list {
+      margin-bottom: 0;
+    }
+    .cv-tweaks .section-list li {
+      color: var(--text);
+    }
     .empty {
       padding: 18px;
       border: 1px dashed var(--line);
@@ -330,7 +375,7 @@
       
       <div class="grid">
         
-        <article class="job">
+        <article class="job job-priority">
           <div class="job-layout">
             <div class="score-inline">
               <div class="score">88</div>
@@ -383,11 +428,25 @@
               </ul>
               
               
+              <div class="cv-tweaks">
+                <p class="cv-tweaks-title">Tailor your CV for this role <em>small edits</em></p>
+                <ul class="section-list">
+                  
+                  <li>Lead with the retrieval/embeddings and evaluation-tooling experience to match the role's ranking and recommendation focus.</li>
+                  
+                  <li>Reword a backend bullet to surface FastAPI services and experimentation, matching the 'production ML + backend services' framing.</li>
+                  
+                  <li>Add 'A/B testing' and 'ranking/retrieval' to the skills line where legitimately backed by past projects.</li>
+                  
+                </ul>
+              </div>
+              
+              
             </div>
           </div>
         </article>
         
-        <article class="job">
+        <article class="job job-priority">
           <div class="job-layout">
             <div class="score-inline">
               <div class="score">81</div>
@@ -438,6 +497,20 @@
                 <li>Prepare stories about debugging, reliability, and data processing tradeoffs.</li>
                 
               </ul>
+              
+              
+              <div class="cv-tweaks">
+                <p class="cv-tweaks-title">Tailor your CV for this role <em>small edits</em></p>
+                <ul class="section-list">
+                  
+                  <li>Surface the data-pipeline and batch-processing work near the top to match the high-volume data infrastructure focus.</li>
+                  
+                  <li>Reframe a backend bullet around reliability and distributed systems rather than ML, since this role is coding/systems-heavy.</li>
+                  
+                  <li>Keep PostgreSQL, Docker, and CI prominent on the skills line to evidence production backend readiness.</li>
+                  
+                </ul>
+              </div>
               
               
             </div>
@@ -493,6 +566,7 @@
                 <li>Prepare RAG, evaluation, and deployment examples.</li>
                 
               </ul>
+              
               
               
             </div>
@@ -588,6 +662,7 @@
                 <li>Prepare RAG, evaluation, and deployment examples.</li>
                 
               </ul>
+              
               
               
             </div>

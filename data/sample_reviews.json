@@ -21,6 +21,11 @@
       "Prepare a retrieval or ranking project with evaluation metrics.",
       "Write examples covering ML deployment, monitoring, and A/B testing."
     ],
+    "cv_tweaks": [
+      "Lead with the retrieval/embeddings and evaluation-tooling experience to match the role's ranking and recommendation focus.",
+      "Reword a backend bullet to surface FastAPI services and experimentation, matching the 'production ML + backend services' framing.",
+      "Add 'A/B testing' and 'ranking/retrieval' to the skills line where legitimately backed by past projects."
+    ],
     "dimensions": {
       "nlp_relevance": "medium",
       "ml_relevance": "high",
@@ -52,6 +57,11 @@
     "prep_actions": [
       "Review distributed systems fundamentals and observability pipelines.",
       "Prepare stories about debugging, reliability, and data processing tradeoffs."
+    ],
+    "cv_tweaks": [
+      "Surface the data-pipeline and batch-processing work near the top to match the high-volume data infrastructure focus.",
+      "Reframe a backend bullet around reliability and distributed systems rather than ML, since this role is coding/systems-heavy.",
+      "Keep PostgreSQL, Docker, and CI prominent on the skills line to evidence production backend readiness."
     ],
     "dimensions": {
       "nlp_relevance": "low",
