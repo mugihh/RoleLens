@@ -143,6 +143,7 @@ rolelens demo
 rolelens setup-check
 rolelens update
 rolelens triage
+rolelens inbox
 rolelens import-manual imports/manual/
 rolelens import-reviews review_results/
 rolelens report
@@ -154,6 +155,7 @@ Command summary:
 - `setup-check`: validate local candidate files, source config, and runtime directories.
 - `update`: import local jobs, scan configured sources, update SQLite, export a review queue, and generate a preliminary report.
 - `triage`: generate a token-saving `reports/review_plan.md` before full agent review.
+- `inbox`: build a zero-LLM `reports/inbox.md` (Top picks / Potential / Archive) using deterministic, profile-tuned signals — no model tokens. Tune it via `candidate/profile.yaml` (regions, `minimum_japan_compensation_jpy`, and `large_companies`).
 - `import-manual`: normalize Markdown frontmatter or JSON manual imports.
 - `import-reviews`: validate agent-generated review JSON and persist it locally.
 - `report`: regenerate latest HTML/Markdown reports from local data.

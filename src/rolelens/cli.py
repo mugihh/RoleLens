@@ -2,6 +2,7 @@ from pathlib import Path
 
 import typer
 
+from rolelens.inbox import generate_inbox
 from rolelens.manual_import import import_manual_jobs
 from rolelens.reports import (
     generate_demo_report,
@@ -278,6 +279,77 @@ def triage_command(
     typer.echo(f"- maybe: {result.maybe_count}")
     typer.echo(f"- skip: {result.skip_count}")
     typer.echo(f"- already_reviewed: {result.already_reviewed_count}")
+
+
+@app.command("inbox")
+def inbox_command(
+    private_root: Path | None = typer.Option(
+        None,
+        "--private-root",
+        help="Private overlay root for default input/output paths.",
+    ),
+    jobs_path: Path = typer.Option(
+        Path("data/jobs_raw.json"),
+        "--jobs",
+        help="Path to normalized jobs JSON.",
+    ),
+    profile_path: Path | None = typer.Option(
+        Path("candidate/profile.yaml"),
+        "--profile",
+        help="Optional candidate profile used to tune inbox signals.",
+    ),
+    review_results_dir: Path = typer.Option(
+        Path("review_results"),
+        "--review-results-dir",
+        help="Directory of existing *.review.json files to exclude from the inbox.",
+    ),
+    output_path: Path = typer.Option(
+        Path("reports/inbox.md"),
+        "--output",
+        "-o",
+        help="Path where the Markdown inbox will be written.",
+    ),
+    json_path: Path = typer.Option(
+        Path("data/inbox.json"),
+        "--json-output",
+        help="Path where the machine-readable inbox will be written.",
+    ),
+    inbox_size: int = typer.Option(
+        5, "--inbox-size", help="Number of jobs in the Top picks section."
+    ),
+    potential_size: int = typer.Option(
+        20, "--potential-size", help="Number of jobs in the Potential pool."
+    ),
+) -> None:
+    """Build a zero-LLM Top picks / Potential / Archive inbox (no tokens)."""
+    jobs_path = _overlay_path(jobs_path, Path("data/jobs_raw.json"), private_root)
+    profile_path = _overlay_optional_path(
+        profile_path,
+        Path("candidate/profile.yaml"),
+        private_root,
+    )
+    review_results_dir = _overlay_path(
+        review_results_dir,
+        Path("review_results"),
+        private_root,
+    )
+    output_path = _overlay_path(output_path, Path("reports/inbox.md"), private_root)
+    json_path = _overlay_path(json_path, Path("data/inbox.json"), private_root)
+    result = generate_inbox(
+        jobs_path=jobs_path,
+        profile_path=profile_path,
+        review_results_dir=review_results_dir,
+        output_path=output_path,
+        json_path=json_path,
+        inbox_size=inbox_size,
+        potential_size=potential_size,
+    )
+    typer.echo(f"Generated inbox: {result.output_path}")
+    typer.echo(
+        f"- top picks: {result.inbox_count}\n"
+        f"- potential: {result.potential_count}\n"
+        f"- archive: {result.archive_count}"
+    )
 
 
 @app.command("export-review-queue", hidden=True)

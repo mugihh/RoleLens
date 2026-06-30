@@ -8,6 +8,7 @@ PUBLIC_COMMANDS = [
     "setup-check",
     "update",
     "triage",
+    "inbox",
     "import-manual",
     "import-reviews",
     "report",
