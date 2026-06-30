@@ -65,6 +65,7 @@ Output schema:
   "reasons": ["Reason grounded in the JD"],
   "risks": ["Risk or tradeoff grounded in the JD"],
   "prep_actions": ["Concrete prep action"],
+  "cv_tweaks": ["Small, specific CV edit to tailor the resume for this role"],
   "dimensions": {
     "nlp_relevance": "high",
     "ml_relevance": "high",
@@ -79,3 +80,10 @@ Output schema:
 
 Use `high`, `medium`, `low`, or `unknown` for intensity and custom dimension
 values when possible.
+
+For category `A` (priority apply) jobs, fill `cv_tweaks` with 2-4 small, specific
+edits to tailor the candidate's CV for THIS role: surface a relevant project or
+experience, reword a bullet toward the JD's keywords, reorder skills, or add a
+keyword the JD emphasizes that the candidate legitimately has. Keep them honest
+(no fabricated experience) and concrete enough to act on. For `B`/`C` jobs,
+`cv_tweaks` may be left empty.

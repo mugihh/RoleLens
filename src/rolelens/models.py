@@ -67,6 +67,7 @@ class ReviewRecord(BaseModel):
     reasons: list[str] = Field(min_length=1)
     risks: list[str] = Field(default_factory=list)
     prep_actions: list[str] = Field(default_factory=list)
+    cv_tweaks: list[str] = Field(default_factory=list)
     dimensions: dict[str, str] = Field(default_factory=dict)
     compensation_notes: str = ""
     external_research: list[dict[str, Any]] = Field(default_factory=list)

@@ -244,6 +244,8 @@ def _markdown_job_card(job: dict[str, Any], review: dict[str, Any] | None) -> li
                 f"- Prep actions: {'; '.join(review['prep_actions'])}",
             ]
         )
+        if review.get("cv_tweaks"):
+            lines.append(f"- CV tweaks: {'; '.join(review['cv_tweaks'])}")
     else:
         lines.append("- Review: pending")
     lines.append("")
@@ -344,6 +346,7 @@ def _report_job(
         "fit_score_display": "-",
         "score_label": "pending",
         "detail_blocks": [],
+        "cv_tweaks": [],
     }
     if review is not None:
         item.update(
@@ -355,6 +358,7 @@ def _report_job(
                     {"title": "Risks", "items": review["risks"]},
                     {"title": "Prep", "items": review["prep_actions"]},
                 ],
+                "cv_tweaks": review.get("cv_tweaks", []),
             }
         )
     return item
